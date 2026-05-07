@@ -48,36 +48,57 @@ export default async function CategoryPage({ category }: { category: string }) {
 
   return (
     <div style={{ minHeight: '100vh' }}>
-      {/* 카테고리 헤더 */}
-      <section style={{ background: '#0D0D0D', padding: '4rem 0 3rem', borderBottom: `3px solid ${cfg.color}` }}>
+      <section style={{
+        background: '#0D0D0D', padding: '4rem 0 3rem',
+        borderBottom: `3px solid ${cfg.color}`,
+      }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: cfg.color, letterSpacing: '0.2em', marginBottom: '1rem' }}>
+          <div style={{
+            fontFamily: "'Noto Sans KR', sans-serif",
+            fontSize: '0.65rem', color: cfg.color,
+            letterSpacing: '0.2em', marginBottom: '1rem',
+          }}>
             {cfg.label}
           </div>
           <h1 style={{
-            fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3.5rem)',
-            fontWeight: 700, color: '#F7F5F0', letterSpacing: '-0.02em',
-            lineHeight: 1.1, marginBottom: '1rem',
+            fontFamily: "'Noto Sans KR', sans-serif",
+            fontSize: 'clamp(2rem, 4vw, 3rem)',
+            fontWeight: 700, color: '#F7F5F0',
+            letterSpacing: '-0.02em', lineHeight: 1.2,
+            marginBottom: '1rem',
           }}>
             {cfg.name}
           </h1>
-          <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: '#888', maxWidth: '480px', lineHeight: 1.7 }}>
+          <p style={{
+            fontFamily: "'Noto Sans KR', sans-serif",
+            fontSize: '0.95rem', color: '#888',
+            maxWidth: '480px', lineHeight: 1.8,
+            fontWeight: 300,
+          }}>
             {cfg.description}
           </p>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#444', marginTop: '1.5rem' }}>
+          <div style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '0.7rem', color: '#444', marginTop: '1.5rem',
+          }}>
             총 {posts.length}개의 글
           </div>
         </div>
       </section>
 
-      {/* 포스트 목록 */}
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem' }}>
         {posts.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '6rem 0' }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', color: '#CCC', marginBottom: '1rem' }}>
+            <div style={{
+              fontFamily: "'Noto Sans KR', sans-serif",
+              fontSize: '1.5rem', color: '#CCC',
+              fontWeight: 500, marginBottom: '1rem',
+            }}>
               준비 중입니다
             </div>
-            <p style={{ fontFamily: 'var(--font-body)', color: '#AAA' }}>곧 첫 번째 글이 올라올 예정입니다.</p>
+            <p style={{ fontFamily: "'Noto Sans KR', sans-serif", color: '#AAA', fontWeight: 300 }}>
+              곧 첫 번째 글이 올라올 예정입니다.
+            </p>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '2rem' }}>
@@ -89,16 +110,20 @@ export default async function CategoryPage({ category }: { category: string }) {
                   borderRadius: '4px', padding: '2rem', height: '100%',
                 }}>
                   <h2 style={{
-                    fontFamily: 'var(--font-display)', fontSize: '1.2rem',
-                    fontWeight: 600, color: '#0D0D0D', lineHeight: 1.3,
+                    fontFamily: "'Noto Sans KR', sans-serif",
+                    fontSize: '1.1rem', fontWeight: 700,
+                    color: '#0D0D0D', lineHeight: 1.4,
                     letterSpacing: '-0.01em', marginBottom: '0.75rem',
+                    wordBreak: 'keep-all',
                   }}>
                     {post.title}
                   </h2>
                   {post.summary && (
                     <p style={{
-                      fontFamily: 'var(--font-body)', fontSize: '0.875rem',
-                      color: '#888', lineHeight: 1.7, marginBottom: '1.25rem',
+                      fontFamily: "'Noto Sans KR', sans-serif",
+                      fontSize: '0.875rem', color: '#888',
+                      lineHeight: 1.7, marginBottom: '1.25rem',
+                      fontWeight: 300, wordBreak: 'keep-all',
                       display: '-webkit-box', WebkitLineClamp: 3,
                       WebkitBoxOrient: 'vertical', overflow: 'hidden',
                     }}>
@@ -106,10 +131,10 @@ export default async function CategoryPage({ category }: { category: string }) {
                     </p>
                   )}
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#BBB' }}>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '0.65rem', color: '#BBB' }}>
                       {post.publishedDate}
                     </span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: cfg.color }}>
+                    <span style={{ fontFamily: "'Noto Sans KR', sans-serif", fontSize: '0.75rem', color: cfg.color, fontWeight: 500 }}>
                       읽기 →
                     </span>
                   </div>
