@@ -8,6 +8,9 @@ const CATEGORY_CONFIG: Record<string, { href: string; color: string; label: stri
   '삶의태도':{ href: '/life',       color: '#4A3882', label: 'LIFE' },
 }
 
+const KR = "'Noto Sans KR', sans-serif"
+const MONO = "'JetBrains Mono', monospace"
+
 export async function generateStaticParams() {
   try {
     const posts = await getAllPosts()
@@ -33,7 +36,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-// 마크다운을 간단한 HTML로 변환
 function renderMarkdown(md: string): string {
   return md
     .replace(/^### (.+)$/gm, '<h3>$1</h3>')
@@ -46,7 +48,6 @@ function renderMarkdown(md: string): string {
     .replace(/^---$/gm, '<hr style="border:none;border-top:1px solid #E8E4DC;margin:2rem 0">')
     .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" style="color:inherit;text-decoration:underline;text-underline-offset:3px">$1</a>')
     .replace(/\n\n/g, '</p><p>')
-    .replace(/^(?!<[h|b|e|c|a|p|u|o|l|t|s|h|i|d])/gm, '')
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
@@ -61,36 +62,35 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const cfg = CATEGORY_CONFIG[post.category] ?? { href: '/', color: '#888', label: post.category }
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-paper)' }}>
-      {/* 헤더 영역 */}
+    <div style={{ minHeight: '100vh', background: '#F7F5F0' }}>
+      {/* 헤더 */}
       <div style={{ background: '#0D0D0D', padding: '4rem 0 3rem', borderBottom: '1px solid #1A1A1A' }}>
-        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 2rem' }}>
+        <div style={{ maxWidth: '780px', margin: '0 auto', padding: '0 2rem' }}>
           {/* 브레드크럼 */}
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '2rem' }}>
-            <Link href="/" style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#555', textDecoration: 'none' }}>
-              Home
-            </Link>
+            <Link href="/" style={{ fontFamily: MONO, fontSize: '0.7rem', color: '#555', textDecoration: 'none' }}>Home</Link>
             <span style={{ color: '#333', fontSize: '0.7rem' }}>/</span>
-            <Link href={cfg.href} style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: cfg.color, textDecoration: 'none' }}>
-              {cfg.label}
-            </Link>
+            <Link href={cfg.href} style={{ fontFamily: MONO, fontSize: '0.7rem', color: cfg.color, textDecoration: 'none' }}>{cfg.label}</Link>
           </div>
 
           {/* 카테고리 뱃지 */}
           <div style={{
-            display: 'inline-block', border: `1px solid ${cfg.color}60`,
+            display: 'inline-block',
+            border: `1px solid ${cfg.color}60`,
             padding: '0.2rem 0.75rem', borderRadius: '2px', marginBottom: '1.5rem',
           }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: cfg.color, letterSpacing: '0.15em' }}>
+            <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: cfg.color, letterSpacing: '0.15em' }}>
               {cfg.label}
             </span>
           </div>
 
           {/* 제목 */}
           <h1 style={{
-            fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
-            fontWeight: 700, color: '#F7F5F0', lineHeight: 1.15,
-            letterSpacing: '-0.02em', marginBottom: '1.5rem',
+            fontFamily: KR,
+            fontSize: 'clamp(1.6rem, 4vw, 2.5rem)',
+            fontWeight: 700, color: '#F7F5F0',
+            lineHeight: 1.3, letterSpacing: '-0.02em',
+            marginBottom: '1.25rem', wordBreak: 'keep-all',
           }}>
             {post.title}
           </h1>
@@ -98,9 +98,10 @@ export default async function PostPage({ params }: { params: { slug: string } })
           {/* 요약 */}
           {post.summary && (
             <p style={{
-              fontFamily: 'var(--font-body)', fontSize: '1.1rem',
-              color: '#888', lineHeight: 1.7, marginBottom: '2rem',
-              fontStyle: 'italic',
+              fontFamily: KR, fontSize: '1rem',
+              color: '#888', lineHeight: 1.8,
+              marginBottom: '2rem', fontWeight: 300,
+              wordBreak: 'keep-all',
             }}>
               {post.summary}
             </p>
@@ -109,12 +110,12 @@ export default async function PostPage({ params }: { params: { slug: string } })
           {/* 메타 */}
           <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
             {post.publishedDate && (
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#555' }}>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: '#555' }}>
                 📅 {post.publishedDate}
               </span>
             )}
             {post.keywords && (
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#555' }}>
+              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: '#555' }}>
                 🔑 {post.keywords}
               </span>
             )}
@@ -123,9 +124,27 @@ export default async function PostPage({ params }: { params: { slug: string } })
       </div>
 
       {/* 본문 */}
-      <article style={{ maxWidth: '800px', margin: '0 auto', padding: '4rem 2rem' }}>
+      <article style={{ maxWidth: '780px', margin: '0 auto', padding: '4rem 2rem' }}>
+        <style>{`
+          .post-body { font-family: 'Noto Sans KR', sans-serif; font-size: 1.05rem; line-height: 1.95; color: #1A1A1A; word-break: keep-all; }
+          .post-body h1, .post-body h2, .post-body h3 { font-family: 'Noto Sans KR', sans-serif; font-weight: 700; letter-spacing: -0.02em; margin-top: 2.5em; margin-bottom: 0.75em; }
+          .post-body h1 { font-size: 1.75rem; }
+          .post-body h2 { font-size: 1.4rem; border-bottom: 1px solid #E8E4DC; padding-bottom: 0.5rem; }
+          .post-body h3 { font-size: 1.15rem; }
+          .post-body p { margin-bottom: 1.5em; }
+          .post-body blockquote { border-left: 3px solid #C9A84C; padding: 1rem 1.5rem; margin: 2rem 0; font-weight: 300; color: #3E3E3E; background: rgba(201,168,76,0.06); border-radius: 0 4px 4px 0; }
+          .post-body strong { font-weight: 700; }
+          .post-body em { font-style: italic; }
+          .post-body table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.9rem; }
+          .post-body th { background: #0D0D0D; color: #F7F5F0; padding: 0.75rem 1rem; text-align: left; font-weight: 500; font-size: 0.8rem; letter-spacing: 0.03em; }
+          .post-body td { padding: 0.75rem 1rem; border-bottom: 1px solid #EEEBE3; }
+          .post-body tr:hover td { background: rgba(0,0,0,0.02); }
+          .post-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.875em; background: #EEEBE3; padding: 0.15em 0.4em; border-radius: 3px; }
+          .post-body hr { border: none; border-top: 1px solid #E8E4DC; margin: 2.5rem 0; }
+        `}</style>
+
         <div
-          className="prose-custom"
+          className="post-body"
           dangerouslySetInnerHTML={{ __html: `<p>${renderMarkdown(content)}</p>` }}
         />
 
@@ -133,13 +152,13 @@ export default async function PostPage({ params }: { params: { slug: string } })
         {post.references && (
           <div style={{
             marginTop: '4rem', padding: '1.5rem 2rem',
-            background: '#fff', border: '1px solid #E8E4DC', borderRadius: '4px',
-            borderLeft: `3px solid ${cfg.color}`,
+            background: '#fff', border: '1px solid #E8E4DC',
+            borderRadius: '4px', borderLeft: `3px solid ${cfg.color}`,
           }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#AAA', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+            <div style={{ fontFamily: MONO, fontSize: '0.65rem', color: '#AAA', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
               REFERENCES
             </div>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: '#666', lineHeight: 1.7, margin: 0 }}>
+            <p style={{ fontFamily: KR, fontSize: '0.875rem', color: '#666', lineHeight: 1.8, margin: 0, fontWeight: 300 }}>
               {post.references}
             </p>
           </div>
@@ -150,7 +169,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
           marginTop: '3rem', padding: '1rem 1.5rem',
           background: '#F7F5F0', border: '1px solid #E8E4DC', borderRadius: '4px',
         }}>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#999', lineHeight: 1.6, margin: 0 }}>
+          <p style={{ fontFamily: KR, fontSize: '0.75rem', color: '#999', lineHeight: 1.7, margin: 0, fontWeight: 300 }}>
             본 포스트는 정보 제공 목적으로 작성되었으며 투자 권유가 아닙니다. 투자 결정은 본인 책임 하에 이루어져야 합니다.
           </p>
         </div>
@@ -158,7 +177,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
         {/* 뒤로가기 */}
         <div style={{ marginTop: '3rem', textAlign: 'center' }}>
           <Link href={cfg.href} style={{
-            fontFamily: 'var(--font-display)', fontSize: '0.95rem',
+            fontFamily: KR, fontSize: '0.9rem', fontWeight: 500,
             color: cfg.color, textDecoration: 'none',
             border: `1px solid ${cfg.color}`,
             padding: '0.75rem 2rem', borderRadius: '4px',
