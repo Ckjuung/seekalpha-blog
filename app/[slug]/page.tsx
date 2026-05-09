@@ -4,10 +4,8 @@ import type { Metadata } from 'next'
 import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
 
-// ISR: 60초마다 자동으로 최신 글 확인
 export const revalidate = 60
 
-// 빌드 타임에 알려진 slug만 미리 생성, 나머지는 런타임에 생성
 export async function generateStaticParams() {
   const slugs = await getAllSlugs()
   return slugs.map((slug) => ({ slug }))
@@ -16,8 +14,6 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await getPostBySlug(params.slug)
   if (!post) return {}
-
-  const categoryPath = getCategoryPath(post.category)
 
   return {
     title: `${post.title} | SeekAlpha88`,
@@ -41,7 +37,7 @@ function getCategoryPath(category: string): string {
     '주식': 'stock',
     '부동산': 'realestate',
     '삶의태도': 'life',
-    '교통': 'life',
+    '교통': 'traffic',
   }
   return map[category] ?? 'realestate'
 }
@@ -51,9 +47,19 @@ function getCategoryLabel(category: string): string {
     '주식': 'STOCK',
     '부동산': 'REAL ESTATE',
     '삶의태도': 'LIFE',
-    '교통': 'LIFE',
+    '교통': 'TRAFFIC',
   }
   return map[category] ?? category.toUpperCase()
+}
+
+function getCategoryKorean(category: string): string {
+  const map: Record<string, string> = {
+    '주식': '주식',
+    '부동산': '부동산',
+    '삶의태도': '삶의태도',
+    '교통': '교통',
+  }
+  return map[category] ?? category
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
@@ -63,6 +69,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
   const content = await getPostContent(post.id)
   const categoryPath = getCategoryPath(post.category)
   const categoryLabel = getCategoryLabel(post.category)
+  const categoryKorean = getCategoryKorean(post.category)
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-16">
@@ -114,7 +121,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
       {/* Back link */}
       <div className="mt-10">
         <Link href={`/${categoryPath}`} className="text-sm text-stone-400 hover:text-stone-700">
-          ← {categoryLabel === 'REAL ESTATE' ? '부동산' : categoryLabel === 'STOCK' ? '주식' : '삶의태도'} 목록으로
+          ← {categoryKorean} 목록으로
         </Link>
       </div>
     </main>
