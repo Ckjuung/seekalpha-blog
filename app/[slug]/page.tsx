@@ -1,192 +1,122 @@
-import { getPostBySlug, getPostContent, getAllPosts } from '@/lib/notion'
+import { getPostBySlug, getPostContent, getAllSlugs } from '@/lib/notion'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+import ReactMarkdown from 'react-markdown'
 import Link from 'next/link'
 
-const CATEGORY_CONFIG: Record<string, { href: string; color: string; label: string }> = {
-  '주식':    { href: '/stock',      color: '#1A6B3C', label: 'STOCK' },
-  '부동산':  { href: '/realestate', color: '#8B4513', label: 'REAL ESTATE' },
-  '삶의태도':{ href: '/life',       color: '#4A3882', label: 'LIFE' },
-}
+// ISR: 60초마다 자동으로 최신 글 확인
+export const revalidate = 60
 
-const KR = "'Noto Sans KR', sans-serif"
-const MONO = "'JetBrains Mono', monospace"
-
+// 빌드 타임에 알려진 slug만 미리 생성, 나머지는 런타임에 생성
 export async function generateStaticParams() {
-  try {
-    const posts = await getAllPosts()
-    return posts.map(p => ({ slug: p.slug }))
-  } catch {
-    return []
-  }
+  const slugs = await getAllSlugs()
+  return slugs.map((slug) => ({ slug }))
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const post = await getPostBySlug(params.slug)
   if (!post) return {}
+
+  const categoryPath = getCategoryPath(post.category)
+
   return {
-    title: post.title,
+    title: `${post.title} | SeekAlpha88`,
     description: post.summary,
-    keywords: post.keywords,
+    keywords: post.keywords ? post.keywords.split(',').map((k) => k.trim()) : [],
+    robots: { index: true, follow: true },
     openGraph: {
       title: post.title,
       description: post.summary,
       type: 'article',
       publishedTime: post.publishedDate,
+      locale: 'ko_KR',
+      siteName: 'SeekAlpha88',
     },
+    twitter: { card: 'summary', title: post.title, description: post.summary },
   }
 }
 
-function renderMarkdown(md: string): string {
-  return md
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/`(.+?)`/g, '<code>$1</code>')
-    .replace(/^\> (.+)$/gm, '<blockquote>$1</blockquote>')
-    .replace(/^---$/gm, '<hr style="border:none;border-top:1px solid #E8E4DC;margin:2rem 0">')
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" style="color:inherit;text-decoration:underline;text-underline-offset:3px">$1</a>')
-    .replace(/\n\n/g, '</p><p>')
+function getCategoryPath(category: string): string {
+  const map: Record<string, string> = {
+    '주식': 'stock',
+    '부동산': 'realestate',
+    '삶의태도': 'life',
+    '교통': 'life',
+  }
+  return map[category] ?? 'realestate'
+}
+
+function getCategoryLabel(category: string): string {
+  const map: Record<string, string> = {
+    '주식': 'STOCK',
+    '부동산': 'REAL ESTATE',
+    '삶의태도': 'LIFE',
+    '교통': 'LIFE',
+  }
+  return map[category] ?? category.toUpperCase()
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
   const post = await getPostBySlug(params.slug)
   if (!post) notFound()
 
-  let content = ''
-  try {
-    content = await getPostContent(post.id)
-  } catch (e) {}
-
-  const cfg = CATEGORY_CONFIG[post.category] ?? { href: '/', color: '#888', label: post.category }
+  const content = await getPostContent(post.id)
+  const categoryPath = getCategoryPath(post.category)
+  const categoryLabel = getCategoryLabel(post.category)
 
   return (
-    <div style={{ minHeight: '100vh', background: '#F7F5F0' }}>
-      {/* 헤더 */}
-      <div style={{ background: '#0D0D0D', padding: '4rem 0 3rem', borderBottom: '1px solid #1A1A1A' }}>
-        <div style={{ maxWidth: '780px', margin: '0 auto', padding: '0 2rem' }}>
-          {/* 브레드크럼 */}
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '2rem' }}>
-            <Link href="/" style={{ fontFamily: MONO, fontSize: '0.7rem', color: '#555', textDecoration: 'none' }}>Home</Link>
-            <span style={{ color: '#333', fontSize: '0.7rem' }}>/</span>
-            <Link href={cfg.href} style={{ fontFamily: MONO, fontSize: '0.7rem', color: cfg.color, textDecoration: 'none' }}>{cfg.label}</Link>
-          </div>
-
-          {/* 카테고리 뱃지 */}
-          <div style={{
-            display: 'inline-block',
-            border: `1px solid ${cfg.color}60`,
-            padding: '0.2rem 0.75rem', borderRadius: '2px', marginBottom: '1.5rem',
-          }}>
-            <span style={{ fontFamily: MONO, fontSize: '0.65rem', color: cfg.color, letterSpacing: '0.15em' }}>
-              {cfg.label}
-            </span>
-          </div>
-
-          {/* 제목 */}
-          <h1 style={{
-            fontFamily: KR,
-            fontSize: 'clamp(1.6rem, 4vw, 2.5rem)',
-            fontWeight: 700, color: '#F7F5F0',
-            lineHeight: 1.3, letterSpacing: '-0.02em',
-            marginBottom: '1.25rem', wordBreak: 'keep-all',
-          }}>
-            {post.title}
-          </h1>
-
-          {/* 요약 */}
-          {post.summary && (
-            <p style={{
-              fontFamily: KR, fontSize: '1rem',
-              color: '#888', lineHeight: 1.8,
-              marginBottom: '2rem', fontWeight: 300,
-              wordBreak: 'keep-all',
-            }}>
-              {post.summary}
-            </p>
-          )}
-
-          {/* 메타 */}
-          <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-            {post.publishedDate && (
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: '#555' }}>
-                📅 {post.publishedDate}
-              </span>
-            )}
-            {post.keywords && (
-              <span style={{ fontFamily: MONO, fontSize: '0.7rem', color: '#555' }}>
-                🔑 {post.keywords}
-              </span>
-            )}
-          </div>
-        </div>
+    <main className="max-w-3xl mx-auto px-4 py-16">
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 text-xs text-stone-400 mb-8">
+        <Link href="/" className="hover:text-stone-600">Home</Link>
+        <span>/</span>
+        <Link href={`/${categoryPath}`} className="hover:text-stone-600 uppercase">{categoryLabel}</Link>
       </div>
 
-      {/* 본문 */}
-      <article style={{ maxWidth: '780px', margin: '0 auto', padding: '4rem 2rem' }}>
-        <style>{`
-          .post-body { font-family: 'Noto Sans KR', sans-serif; font-size: 1.05rem; line-height: 1.95; color: #1A1A1A; word-break: keep-all; }
-          .post-body h1, .post-body h2, .post-body h3 { font-family: 'Noto Sans KR', sans-serif; font-weight: 700; letter-spacing: -0.02em; margin-top: 2.5em; margin-bottom: 0.75em; }
-          .post-body h1 { font-size: 1.75rem; }
-          .post-body h2 { font-size: 1.4rem; border-bottom: 1px solid #E8E4DC; padding-bottom: 0.5rem; }
-          .post-body h3 { font-size: 1.15rem; }
-          .post-body p { margin-bottom: 1.5em; }
-          .post-body blockquote { border-left: 3px solid #C9A84C; padding: 1rem 1.5rem; margin: 2rem 0; font-weight: 300; color: #3E3E3E; background: rgba(201,168,76,0.06); border-radius: 0 4px 4px 0; }
-          .post-body strong { font-weight: 700; }
-          .post-body em { font-style: italic; }
-          .post-body table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.9rem; }
-          .post-body th { background: #0D0D0D; color: #F7F5F0; padding: 0.75rem 1rem; text-align: left; font-weight: 500; font-size: 0.8rem; letter-spacing: 0.03em; }
-          .post-body td { padding: 0.75rem 1rem; border-bottom: 1px solid #EEEBE3; }
-          .post-body tr:hover td { background: rgba(0,0,0,0.02); }
-          .post-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.875em; background: #EEEBE3; padding: 0.15em 0.4em; border-radius: 3px; }
-          .post-body hr { border: none; border-top: 1px solid #E8E4DC; margin: 2.5rem 0; }
-        `}</style>
+      {/* Header */}
+      <div className="mb-2 text-xs font-semibold tracking-widest text-stone-400 uppercase">{categoryLabel}</div>
+      <h1 className="text-3xl font-bold text-stone-900 mb-3 leading-snug">{post.title}</h1>
+      {post.summary && <p className="text-stone-500 mb-4 leading-relaxed">{post.summary}</p>}
 
-        <div
-          className="post-body"
-          dangerouslySetInnerHTML={{ __html: `<p>${renderMarkdown(content)}</p>` }}
-        />
+      <div className="flex flex-wrap gap-3 text-xs text-stone-400 mb-10">
+        {post.publishedDate && <span>📅 {post.publishedDate}</span>}
+        {post.keywords && <span>🔑 {post.keywords}</span>}
+      </div>
 
-        {/* 참고문헌 */}
-        {post.references && (
-          <div style={{
-            marginTop: '4rem', padding: '1.5rem 2rem',
-            background: '#fff', border: '1px solid #E8E4DC',
-            borderRadius: '4px', borderLeft: `3px solid ${cfg.color}`,
-          }}>
-            <div style={{ fontFamily: MONO, fontSize: '0.65rem', color: '#AAA', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-              REFERENCES
-            </div>
-            <p style={{ fontFamily: KR, fontSize: '0.875rem', color: '#666', lineHeight: 1.8, margin: 0, fontWeight: 300 }}>
-              {post.references}
-            </p>
-          </div>
-        )}
+      <hr className="border-stone-100 mb-10" />
 
-        {/* 면책 */}
-        <div style={{
-          marginTop: '3rem', padding: '1rem 1.5rem',
-          background: '#F7F5F0', border: '1px solid #E8E4DC', borderRadius: '4px',
-        }}>
-          <p style={{ fontFamily: KR, fontSize: '0.75rem', color: '#999', lineHeight: 1.7, margin: 0, fontWeight: 300 }}>
-            본 포스트는 정보 제공 목적으로 작성되었으며 투자 권유가 아닙니다. 투자 결정은 본인 책임 하에 이루어져야 합니다.
-          </p>
-        </div>
-
-        {/* 뒤로가기 */}
-        <div style={{ marginTop: '3rem', textAlign: 'center' }}>
-          <Link href={cfg.href} style={{
-            fontFamily: KR, fontSize: '0.9rem', fontWeight: 500,
-            color: cfg.color, textDecoration: 'none',
-            border: `1px solid ${cfg.color}`,
-            padding: '0.75rem 2rem', borderRadius: '4px',
-            display: 'inline-block', transition: 'all 0.15s ease',
-          }}>
-            ← {post.category} 목록으로
-          </Link>
-        </div>
+      {/* Content */}
+      <article className="prose prose-stone prose-sm max-w-none
+        prose-headings:font-bold prose-headings:text-stone-900
+        prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4
+        prose-h3:text-base prose-h3:mt-6 prose-h3:mb-2
+        prose-p:text-stone-700 prose-p:leading-relaxed
+        prose-strong:text-stone-900
+        prose-blockquote:border-stone-300 prose-blockquote:text-stone-500
+        prose-table:text-sm prose-th:bg-stone-50
+        prose-a:text-stone-700 prose-a:underline
+        prose-hr:border-stone-100">
+        <ReactMarkdown>{content}</ReactMarkdown>
       </article>
-    </div>
+
+      {/* References */}
+      {post.references && (
+        <div className="mt-12 pt-6 border-t border-stone-100">
+          <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">References</p>
+          <p className="text-xs text-stone-400">{post.references}</p>
+        </div>
+      )}
+
+      <div className="mt-6">
+        <p className="text-xs text-stone-400">본 포스트는 정보 제공 목적으로 작성되었으며 투자 권유가 아닙니다. 투자 결정은 본인 책임 하에 이루어져야 합니다.</p>
+      </div>
+
+      {/* Back link */}
+      <div className="mt-10">
+        <Link href={`/${categoryPath}`} className="text-sm text-stone-400 hover:text-stone-700">
+          ← {categoryLabel === 'REAL ESTATE' ? '부동산' : categoryLabel === 'STOCK' ? '주식' : '삶의태도'} 목록으로
+        </Link>
+      </div>
+    </main>
   )
 }
