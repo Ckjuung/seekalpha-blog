@@ -63,7 +63,7 @@ export async function getPosts(category?: string): Promise<Post[]> {
       publishedDate: props['Published Date']?.date?.start ?? '',
       keywords: props.Keywords?.rich_text?.[0]?.plain_text ?? '',
       references: props.References?.rich_text?.[0]?.plain_text ?? '',
-      featured: props.Featured?.checkbox ?? false,
+      featured: props.Featured?.checkbox === true || props.Featured?.rich_text?.[0]?.plain_text === '__YES__',
     }
   })
 }
@@ -100,7 +100,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     publishedDate: props['Published Date']?.date?.start ?? '',
     keywords: props.Keywords?.rich_text?.[0]?.plain_text ?? '',
     references: props.References?.rich_text?.[0]?.plain_text ?? '',
-    featured: props.Featured?.checkbox ?? false,
+    featured: props.Featured?.checkbox === true || props.Featured?.rich_text?.[0]?.plain_text === '__YES__',
   }
 }
 
