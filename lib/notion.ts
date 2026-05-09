@@ -110,6 +110,16 @@ export async function getPostContent(pageId: string): Promise<string> {
   return mdString.parent
 }
 
+// 기존 app/page.tsx 호환용 alias
+export async function getAllPosts(): Promise<Post[]> {
+  return getPosts()
+}
+
+export async function getFeaturedPosts(): Promise<Post[]> {
+  const all = await getPosts()
+  return all.filter((p) => p.featured)
+}
+
 export async function getAllSlugs(): Promise<string[]> {
   const response = await notion.databases.query({
     database_id: DATABASE_ID,
