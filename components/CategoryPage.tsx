@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { getAllPosts, Post } from '@/lib/notion'
+import { getPosts, Post } from '@/lib/notion'
 
 type CategoryConfig = {
   name: string
-  notionKey: '주식' | '부동산' | '삶의태도'
+  notionKey: '주식' | '부동산' | '삶의태도' | '교통'
   color: string
   bg: string
   label: string
@@ -17,7 +17,7 @@ const CONFIGS: Record<string, CategoryConfig> = {
     color: '#1A6B3C',
     bg: '#1A6B3C12',
     label: 'STOCK',
-    description: '데이터와 논문에 기반한 주식 시장 분석, 종목 리뷰, 투자 전략을 다룹니다.',
+    description: '데이터와 논문에 기반한 주식 종목 분석, 실적 분석, 투자 아이디어를 다룹니다.',
   },
   realestate: {
     name: '부동산',
@@ -33,7 +33,15 @@ const CONFIGS: Record<string, CategoryConfig> = {
     color: '#4A3882',
     bg: '#4A388212',
     label: 'LIFE',
-    description: '독서, 철학, 커리어, 투자 마인드셋 등 더 나은 삶을 위한 태도를 탐구합니다.',
+    description: '독서, 철학, 커리어, 투자 원칙 등 더 나은 삶을 위한 태도를 탐구합니다.',
+  },
+  traffic: {
+    name: '교통',
+    notionKey: '교통',
+    color: '#1A5C8B',
+    bg: '#1A5C8B12',
+    label: 'TRAFFIC',
+    description: '교통 정책, 도시 교통 분석, 모빌리티 인사이트를 제공합니다.',
   },
 }
 
@@ -43,7 +51,7 @@ export default async function CategoryPage({ category }: { category: string }) {
 
   let posts: Post[] = []
   try {
-    posts = await getAllPosts(cfg.notionKey)
+    posts = await getPosts(cfg.notionKey)
   } catch (e) {}
 
   return (
@@ -94,10 +102,10 @@ export default async function CategoryPage({ category }: { category: string }) {
               fontSize: '1.5rem', color: '#CCC',
               fontWeight: 500, marginBottom: '1rem',
             }}>
-              준비 중입니다
+              아직 글이 없습니다
             </div>
             <p style={{ fontFamily: "'Noto Sans KR', sans-serif", color: '#AAA', fontWeight: 300 }}>
-              곧 첫 번째 글이 올라올 예정입니다.
+              곧 좋은 글을 올릴 예정입니다.
             </p>
           </div>
         ) : (
