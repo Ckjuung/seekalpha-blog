@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 const NAV = [
   { href: '/stock',       label: '주식',     en: 'STOCK',        color: '#1A6B3C' },
   { href: '/realestate',  label: '부동산',   en: 'REAL ESTATE',  color: '#8B4513' },
-  { href: '/life',        label: '삶의태도', en: 'LIFE',         color: '#4A3882' },
+  { href: '/economy',     label: '경제일반', en: 'ECONOMY',      color: '#4A3882' },
 ]
 
 export default function Header() {
@@ -76,7 +76,7 @@ export default function Header() {
           fontSize: '0.65rem', color: '#333',
           letterSpacing: '0.08em', display: 'flex', gap: '2rem',
         }}>
-          <span style={{ color: '#444' }}>주식 · 부동산 · 삶의태도</span>
+          <span style={{ color: '#444' }}>주식 · 부동산 · 경제일반</span>
           <span style={{ color: '#C9A84C' }}>데이터와 논문에 기반한 인사이트</span>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { getFeaturedPosts, getAllPosts, Post } from '@/lib/notion'
 const CATEGORY_CONFIG: Record<string, { href: string; color: string; bg: string; label: string }> = {
   '주식':    { href: '/stock',      color: '#1A6B3C', bg: '#1A6B3C15', label: 'STOCK' },
   '부동산':  { href: '/realestate', color: '#8B4513', bg: '#8B451315', label: 'REAL ESTATE' },
-  '삶의태도':{ href: '/life',       color: '#4A4A8A', bg: '#4A4A8A15', label: 'LIFE' },
+  '경제일반':{ href: '/economy',    color: '#4A3882', bg: '#4A388215', label: 'ECONOMY' },
   '교통':    { href: '/traffic',    color: '#1A5C8B', bg: '#1A5C8B15', label: 'TRAFFIC' },
 }
 
@@ -68,7 +68,7 @@ export default async function HomePage() {
       {/* Hero */}
       <div style={{ marginBottom: '3rem' }}>
         <p style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.15em', color: '#999', marginBottom: '0.5rem' }}>
-          주식 · 부동산 · 교통 · 삶의태도
+          주식 · 부동산 · 교통 · 경제일반
         </p>
         <p style={{ fontSize: '1rem', color: '#555', lineHeight: 1.7 }}>
           데이터와 논문에 기반한 인사이트

@@ -26,7 +26,7 @@ module.exports = {
         accent: {
           stock: '#1A6B3C',
           realestate: '#8B4513',
-          life: '#4A3882',
+          economy: '#4A3882',
           gold: '#C9A84C',
         },
       },

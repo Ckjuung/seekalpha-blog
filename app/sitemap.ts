@@ -7,7 +7,7 @@ export default async function sitemap() {
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'daily', priority: 1 },
     { url: `${baseUrl}/stock`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${baseUrl}/realestate`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
-    { url: `${baseUrl}/life`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/economy`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
   ]
 
   let postPages: any[] = []

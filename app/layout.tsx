@@ -3,12 +3,12 @@ import './globals.css'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'SeekAlpha88 — 주식·부동산·삶의태도 인사이트',
+  title: 'SeekAlpha88 — 주식·부동산·경제일반 인사이트',
   description: '데이터와 논문에 기반한 투자 인사이트. 주식, 부동산, 그리고 삶의 태도를 깊이 있게 탐구합니다.',
-  keywords: ['주식', '부동산', '투자', '청약', '재건축', '삶의태도'],
+  keywords: ['주식', '부동산', '투자', '청약', '재건축', '경제일반'],
   robots: { index: true, follow: true },
   openGraph: {
-    title: 'SeekAlpha88 — 주식·부동산·삶의태도 인사이트',
+    title: 'SeekAlpha88 — 주식·부동산·경제일반 인사이트',
     description: '데이터와 논문에 기반한 투자 인사이트. 주식, 부동산, 그리고 삶의 태도를 깊이 있게 탐구합니다.',
     type: 'website',
     locale: 'ko_KR',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary',
-    title: 'SeekAlpha88 — 주식·부동산·삶의태도 인사이트',
+    title: 'SeekAlpha88 — 주식·부동산·경제일반 인사이트',
     description: '데이터와 논문에 기반한 투자 인사이트. 주식, 부동산, 그리고 삶의 태도를 깊이 있게 탐구합니다.',
   },
 }
@@ -45,8 +45,8 @@ export default function RootLayout({
               <Link href="/traffic" className="text-stone-500 hover:text-stone-900 transition-colors">
                 교통<span className="text-[10px] text-stone-300 ml-0.5 tracking-widest">TRAFFIC</span>
               </Link>
-              <Link href="/life" className="text-stone-500 hover:text-stone-900 transition-colors">
-                삶의태도<span className="text-[10px] text-stone-300 ml-0.5 tracking-widest">LIFE</span>
+              <Link href="/economy" className="text-stone-500 hover:text-stone-900 transition-colors">
+                경제일반<span className="text-[10px] text-stone-300 ml-0.5 tracking-widest">ECONOMY</span>
               </Link>
             </nav>
           </div>
@@ -70,8 +70,8 @@ export default function RootLayout({
                 <Link href="/traffic" className="text-sm text-stone-500 hover:text-stone-900 transition-colors">전체 보기 →</Link>
               </div>
               <div>
-                <div className="text-xs font-semibold tracking-widest text-stone-400 uppercase mb-3">삶의태도</div>
-                <Link href="/life" className="text-sm text-stone-500 hover:text-stone-900 transition-colors">전체 보기 →</Link>
+                <div className="text-xs font-semibold tracking-widest text-stone-400 uppercase mb-3">경제일반</div>
+                <Link href="/economy" className="text-sm text-stone-500 hover:text-stone-900 transition-colors">전체 보기 →</Link>
               </div>
             </div>
             <div className="border-t border-stone-200 pt-8 flex flex-col md:flex-row items-center justify-between gap-2">

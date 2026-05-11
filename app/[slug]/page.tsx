@@ -7,7 +7,7 @@ export const revalidate = 60
 const CATEGORY_CONFIG: Record<string, { href: string; color: string; label: string }> = {
   '주식':    { href: '/stock',      color: '#1A6B3C', label: 'STOCK' },
   '부동산':  { href: '/realestate', color: '#8B4513', label: 'REAL ESTATE' },
-  '삶의태도':{ href: '/life',       color: '#4A3882', label: 'LIFE' },
+  '경제일반':{ href: '/economy',    color: '#4A3882', label: 'ECONOMY' },
   '교통':    { href: '/traffic',    color: '#1A4F8B', label: 'TRAFFIC' },
 }
 

@@ -3,7 +3,7 @@ import { getPosts, Post } from '@/lib/notion'
 
 type CategoryConfig = {
   name: string
-  notionKey: '주식' | '부동산' | '삶의태도' | '교통'
+  notionKey: '주식' | '부동산' | '경제일반' | '교통'
   color: string
   bg: string
   label: string
@@ -27,13 +27,13 @@ const CONFIGS: Record<string, CategoryConfig> = {
     label: 'REAL ESTATE',
     description: '청약 분석, 재개발·재건축 투자, 세금 전략 등 부동산 인사이트를 제공합니다.',
   },
-  life: {
-    name: '삶의태도',
-    notionKey: '삶의태도',
+  economy: {
+    name: '경제일반',
+    notionKey: '경제일반',
     color: '#4A3882',
     bg: '#4A388212',
-    label: 'LIFE',
-    description: '독서, 철학, 커리어, 투자 원칙 등 더 나은 삶을 위한 태도를 탐구합니다.',
+    label: 'ECONOMY',
+    description: '민간투자사업, 경제 정책, 재정 구조 등 경제 전반의 인사이트를 제공합니다.',
   },
   traffic: {
     name: '교통',

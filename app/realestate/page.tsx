@@ -7,7 +7,7 @@ export const revalidate = 60 // 60초마다 자동 갱신
 export const metadata: Metadata = {
   title: '부동산 | SeekAlpha88',
   description: '청약 분석, 재개발·재건축 투자, 세금 전략 등 부동산 인사이트',
-  keywords: ['주식', '부동산', '투자', '청약', '재건축', '삶의태도'],
+  keywords: ['주식', '부동산', '투자', '청약', '재건축', '경제일반'],
   robots: { index: true, follow: true },
   openGraph: {
     title: '부동산 | SeekAlpha88',

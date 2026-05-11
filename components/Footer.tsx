@@ -14,14 +14,14 @@ export default function Footer() {
               SeekAlpha<span style={{ color: '#C9A84C' }}>88</span>
             </div>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: '0.875rem', color: '#666', lineHeight: 1.8, maxWidth: '280px' }}>
-              데이터와 논문에 기반한 투자 인사이트. 주식, 부동산, 그리고 더 나은 삶의 태도를 탐구합니다.
+              데이터와 논문에 기반한 투자 인사이트. 주식, 부동산, 그리고 경제 전반을 탐구합니다.
             </p>
           </div>
           {/* 카테고리 */}
           {[
             { title: '주식', color: '#1A6B3C', links: ['/stock'] },
             { title: '부동산', color: '#8B4513', links: ['/realestate'] },
-            { title: '삶의태도', color: '#4A3882', links: ['/life'] },
+            { title: '경제일반', color: '#4A3882', links: ['/economy'] },
           ].map(({ title, color, links }) => (
             <div key={title}>
               <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.875rem', color, fontWeight: 600, marginBottom: '0.75rem', letterSpacing: '0.05em' }}>
