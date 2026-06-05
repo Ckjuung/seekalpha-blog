@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   description: '데이터와 논문에 기반한 투자 인사이트. 주식, 부동산, 그리고 삶의 태도를 깊이 있게 탐구합니다.',
   keywords: ['주식', '부동산', '투자', '청약', '재건축', '경제일반'],
   robots: { index: true, follow: true },
+  verification: {
+    google: '2QUcjp3HkPCg_xVmUvNup1MqYefo_fg1qBZvxooAaGI',
+  },
   openGraph: {
     title: 'SeekAlpha88 — 주식·부동산·경제일반 인사이트',
     description: '데이터와 논문에 기반한 투자 인사이트. 주식, 부동산, 그리고 삶의 태도를 깊이 있게 탐구합니다.',
